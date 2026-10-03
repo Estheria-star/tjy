@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>第一页 · 星恬</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+:root{
+  --bg:#05070f; --ink:#e8eefb; --ink2:#a9b8d6; --ink3:#66759a;
+  --line:rgba(198,214,240,.22); --moon:#eef4ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg); color:var(--ink); overflow:hidden;
+  font-family:'Segoe UI','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+}
+#sky{position:fixed;inset:0;display:block}
+.wrap{
+  position:relative; min-height:100%; display:flex; align-items:center; justify-content:center;
+  padding:34px 18px;
+}
+.page{
+  width:min(620px,94vw); max-height:88vh; overflow:auto;
+  border:1px solid var(--line); border-radius:22px;
+  background:linear-gradient(180deg,rgba(15,20,38,.86),rgba(8,11,22,.92));
+  box-shadow:0 30px 90px rgba(0,0,0,.6), 0 0 80px rgba(170,190,230,.06);
+  padding:38px 40px 34px; position:relative;
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+}
+@media (max-width:560px){ .page{padding:28px 22px 26px} }
+.mini{display:flex; align-items:center; gap:10px; margin-bottom:26px}
+.mini svg{width:30px;height:30px;filter:drop-shadow(0 0 8px rgba(198,214,240,.4))}
+.mini b{font-size:13px; letter-spacing:3px; color:var(--ink3); font-weight:700}
+h1{
+  font-size:21px; letter-spacing:1px; margin-bottom:6px;
+  display:flex; align-items:baseline; gap:12px;
+}
+h1 small{font-size:11px; color:var(--ink3); letter-spacing:3px; font-weight:700}
+.p{font-size:14px; line-height:2.25; color:var(--ink2); margin-top:14px}
+.p b{color:var(--ink); font-weight:800}
+.p .em{color:#cfdcf5}
+.hr{height:1px; margin:24px 0 4px; background:linear-gradient(90deg,transparent,var(--line),transparent)}
+.line{opacity:0; transform:translateY(6px); animation:lineIn .7s ease forwards}
+@keyframes lineIn{to{opacity:1;transform:none}}
+.foot{
+  margin-top:26px; display:flex; align-items:center; justify-content:space-between;
+  gap:14px; flex-wrap:wrap;
+}
+.back{
+  text-decoration:none; font-size:12.5px; font-weight:700; color:var(--ink2);
+  border:1px solid var(--line); border-radius:999px; padding:9px 18px;
+  transition:all .2s;
+}
+.back:hover{border-color:rgba(198,214,240,.55); color:var(--ink)}
+.hint{font-size:11px; color:var(--ink3); letter-spacing:1px}
+.spark{position:fixed;width:8px;height:8px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,#fff,#c6d6f0 60%,transparent 72%);
+  animation:sp .9s ease-out forwards; z-index:5}
+@keyframes sp{from{transform:translate(-50%,-50%) scale(.5);opacity:1}to{transform:translate(-50%,-160%) scale(1.4);opacity:0}}
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+<div class="wrap">
+  <main class="page">
+    <div class="mini">
+      <svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="17" fill="none" stroke="rgba(198,214,240,.5)" stroke-width="1.4"/><path d="M27 8a17 17 0 1 0 8 19 13 13 0 1 1-8-19z" fill="#dbe4f5" opacity=".92"/></svg>
+      <b>T · J · Y</b>
+    </div>
+    <h1>第一页 · 扉页 <small>PAGE 0</small></h1>
+    <div class="p" id="letter"></div>
+    <div class="hr"></div>
+    <div class="foot">
+      <a class="back" href="https://startian.top/">回到主页 →</a>
+      <span class="hint">这页没有链接通向它，是你自己找来的</span>
+    </div>
+  </main>
+</div>
+<script>
+/* 星尘背景 */
+(function () {
+  var cv = document.getElementById('sky');
+  var ctx = cv.getContext('2d');
+  var stars = [], w = 0, h = 0;
+  function fit() {
+    w = cv.width = Math.round(innerWidth * 1);
+    h = cv.height = Math.round(innerHeight * 1);
+    stars = [];
+    var n = Math.round(w * h / 9000);
+    for (var i = 0; i < n; i++) stars.push({
+      x: Math.random() * w, y: Math.random() * h,
+      r: Math.random() * 1.6 + 0.8,
+      a: 0.35 + Math.random() * 0.55,
+      tw: 0.4 + Math.random() * 1.4, ph: Math.random() * 6.28
+    });
+  }
+  fit(); addEventListener('resize', fit);
+  var T = 0;
+  (function loop() {
+    requestAnimationFrame(loop);
+    T += 1 / 60;
+    ctx.fillStyle = '#05070f';
+    ctx.fillRect(0, 0, w, h);
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var a = s.a * (0.6 + 0.4 * Math.sin(T * s.tw * 2 + s.ph));
+      ctx.globalAlpha = Math.max(0, a);
+      ctx.fillStyle = '#dfe9ff';
+      ctx.fillRect(s.x, s.y, s.r, s.r);
+    }
+    ctx.globalAlpha = 1;
+  })();
+})();
+
+/* 扉页文字（逐行浮现） */
+(function () {
+  var lines = [
+    '如果你能看到这一页，说明你亲手敲下了这三个字母',
+    '（没有链接通向这里，是我故意的）',
+    '@',
+    '那就从最开始讲起吧',
+    '这个小站是从一个想法开始的：把想到的东西都做出来，摆在一个地方',
+    '做着做着，东西多了，就藏了点私心',
+    '@',
+    '我在每一件作品背后放了一页日记，一共十页',
+    '前面八页里各有一个字母，按顺序收好',
+    '集齐八个，回主页找到终端——连点我的头像七下，把它们交进去',
+    '@',
+    '<b>第一页在星空的深处</b>',
+    '种子 1818，坐标我做了记号，找不到就朝那枚小月牙走',
+    '@',
+    '去吧'
+  ];
+  var box = document.getElementById('letter');
+  var html = '';
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i] === '@') html += '<div style="height:10px"></div>';
+    else html += '<div class="line" style="animation-delay:' + (i * 0.55 + 0.3).toFixed(2) + 's">' + lines[i] + '</div>';
+  }
+  box.innerHTML = html;
+  /* 星屑：点击任意处冒一颗 */
+  document.addEventListener('click', function (e) {
+    var s = document.createElement('div');
+    s.className = 'spark';
+    s.style.left = e.clientX + 'px';
+    s.style.top = e.clientY + 'px';
+    document.body.appendChild(s);
+    setTimeout(function () { s.remove(); }, 950);
+  });
+})();
+
+/* 标记：来过这里（跨子域 cookie + localStorage 兜底） */
+(function () {
+  try { localStorage.setItem('st_arg_tjy', '1'); } catch (e) {}
+  try {
+    document.cookie = 'st_arg_tjy=1;domain=.startian.top;path=/;max-age=31536000;SameSite=Lax';
+    document.cookie = 'st_arg_tjy=1;path=/;max-age=31536000;SameSite=Lax';
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>
